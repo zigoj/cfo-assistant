@@ -1,0 +1,25 @@
+Account,Category,Jan 2024 Actual,Jan 2024 Budget
+Revenue,,36250.00,35000.00
+Sales - Product,Revenue,24000.00,22000.00
+Sales - Services,Revenue,12250.00,13000.00
+Cost of Sales,,8100.00,7800.00
+Direct Labour,COGS,5200.00,5000.00
+Direct Materials,COGS,2900.00,2800.00
+Gross Profit,,28150.00,27200.00
+Operating Expenses,,23434.00,22500.00
+Salaries & Wages,Payroll,18500.00,18000.00
+Employer NI,Payroll,1800.00,1750.00
+Office Rent,Rent,6500.00,6500.00
+Utilities,Utilities,320.50,350.00
+IT & Software,IT,850.00,800.00
+Marketing & Ads,Marketing,2100.00,2000.00
+Bank Charges,Bank Charges,45.00,50.00
+Professional Fees,Professional,3500.00,3000.00
+Broadband,IT,89.00,90.00
+EBITDA,,4716.00,4700.00
+Depreciation,Depreciation,500.00,500.00
+EBIT,,4216.00,4200.00
+Interest,,0.00,0.00
+PBT,,4216.00,4200.00
+Corporation Tax,Tax,1054.00,1050.00
+PAT,,3162.00,3150.00

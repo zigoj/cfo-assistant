@@ -39,3 +39,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Secrets
+.env
+.env.local
+worker/.env
+
+# Python
+worker/__pycache__/
+worker/**/__pycache__/
+worker/.venv/
+*.pyc
+
+# Uploads
+/tmp/

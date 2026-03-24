@@ -1,0 +1,34 @@
+Account Code,Account Name,Debit,Credit
+1100,Trade Debtors,28450.00,
+1200,Cash at Bank,94265.56,
+1210,Petty Cash,250.00,
+1300,Prepayments,1840.00,
+2100,Trade Creditors,,6320.00
+2200,VAT Control,,8943.75
+2300,PAYE/NI Payable,,9842.00
+2400,Directors Loan Account,,5000.00
+2500,Deferred Revenue,,4200.00
+3000,Share Capital,,10000.00
+3100,Retained Earnings,,52480.00
+4000,Software Licences & SaaS,,68750.00
+4010,Professional Services,,28500.00
+4020,Support & Maintenance Contracts,,9450.00
+4030,Training & Workshops,,2800.00
+5000,Cloud Infrastructure,5117.62,
+5010,Software Licences (COGS),2865.00,
+5020,Freelance Contractors,4800.00,
+5030,Merchant Processing Fees,412.33,
+6000,Salaries & NI,34560.00,
+6010,PAYE/NI Employer,9842.00,
+6020,Directors Remuneration,8333.33,
+6030,Rent & Rates,6500.00,
+6040,Software Subscriptions,3569.00,
+6050,Travel & Subsistence,1240.00,
+6060,Marketing & Advertising,299.00,
+6070,Professional Fees,0.00,
+6080,Insurance,642.00,
+6090,Telephone & Internet,89.99,
+6100,Office & General,284.50,
+6110,Staff Entertainment,834.00,
+6120,Bank Charges & Interest,53.50,
+6130,Depreciation,1250.00,

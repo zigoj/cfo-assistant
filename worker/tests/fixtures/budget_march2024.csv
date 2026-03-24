@@ -1,0 +1,23 @@
+Account Code,Description,Budget
+4000,Software Licences & SaaS,65000.00
+4010,Professional Services,25000.00
+4020,Support & Maintenance Contracts,8000.00
+4030,Training & Workshops,3500.00
+5000,Cloud Infrastructure (AWS/Azure),4800.00
+5010,Software Licences (COGS),2500.00
+5020,Freelance Contractors,4000.00
+5030,Merchant Processing Fees,350.00
+6000,Salaries & NI,34560.00
+6010,PAYE/NI Employer,9842.00
+6020,Directors Remuneration,8333.33
+6030,Rent & Rates,6500.00
+6040,Software Subscriptions,3200.00
+6050,Travel & Subsistence,1500.00
+6060,Marketing & Advertising,1000.00
+6070,Professional Fees (Legal/Accounting),750.00
+6080,Insurance,642.00
+6090,Telephone & Internet,95.00
+6100,Office & General,300.00
+6110,Staff Entertainment,500.00
+6120,Bank Charges & Interest,40.00
+6130,Depreciation,1250.00

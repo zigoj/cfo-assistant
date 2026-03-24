@@ -1,0 +1,404 @@
+{
+  "version": "1.1",
+  "rules": [
+    {
+      "id": "rule_payroll",
+      "name": "Payroll / Salaries",
+      "priority": 10,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["PAYROLL", "SALARY", "SALARIES", "WAGES", "BACS PAYROLL", "MONTHLY PAY"] },
+          { "field": "description", "op": "regex", "pattern": "(?i)pay\\s?roll|salari" }
+        ]
+      },
+      "action": {
+        "category": "Staff Costs",
+        "pl_line": "5100 - Wages & Salaries",
+        "cf_type": "operating_outflow",
+        "confidence": 0.97
+      }
+    },
+    {
+      "id": "rule_paye_ni",
+      "name": "PAYE / National Insurance",
+      "priority": 10,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["HMRC PAYE", "PAYE", "NATIONAL INSURANCE", "NI PAYMENT", "EMPLOYERS NI"] }
+        ]
+      },
+      "action": {
+        "category": "Staff Costs",
+        "pl_line": "5200 - Employer NI",
+        "cf_type": "operating_outflow",
+        "confidence": 0.97
+      }
+    },
+    {
+      "id": "rule_pension",
+      "name": "Pension Contributions",
+      "priority": 10,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["PENSION", "NEST", "AUTO ENROLMENT", "WORKPLACE PENSION"] }
+        ]
+      },
+      "action": {
+        "category": "Staff Costs",
+        "pl_line": "5300 - Pension",
+        "cf_type": "operating_outflow",
+        "confidence": 0.95
+      }
+    },
+    {
+      "id": "rule_rent",
+      "name": "Rent / Lease",
+      "priority": 9,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["RENT", "LEASE", "LANDLORD", "PROPERTY MGMT"] },
+          { "field": "description", "op": "regex", "pattern": "(?i)\\brent\\b|\\blease\\b" }
+        ]
+      },
+      "action": {
+        "category": "Property Costs",
+        "pl_line": "6200 - Rent & Rates",
+        "cf_type": "operating_outflow",
+        "confidence": 0.90
+      }
+    },
+    {
+      "id": "rule_utilities",
+      "name": "Utilities",
+      "priority": 9,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["BRITISH GAS", "EDF", "EON", "NPOWER", "ELECTRICITY", "GAS BILL", "WATER RATES", "THAMES WATER", "SEVERN TRENT"] }
+        ]
+      },
+      "action": {
+        "category": "Property Costs",
+        "pl_line": "6300 - Utilities",
+        "cf_type": "operating_outflow",
+        "confidence": 0.95
+      }
+    },
+    {
+      "id": "rule_vat",
+      "name": "VAT Payment to HMRC",
+      "priority": 10,
+      "type": "categorize",
+      "conditions": {
+        "operator": "AND",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["HMRC VAT", "VAT PAYMENT", "VAT RETURN"] }
+        ]
+      },
+      "action": {
+        "category": "Tax",
+        "pl_line": "8000 - VAT",
+        "cf_type": "operating_outflow",
+        "confidence": 0.99
+      }
+    },
+    {
+      "id": "rule_corp_tax",
+      "name": "Corporation Tax",
+      "priority": 10,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["CORPORATION TAX", "CT600", "HMRC CT", "CORP TAX"] }
+        ]
+      },
+      "action": {
+        "category": "Tax",
+        "pl_line": "8100 - Corporation Tax",
+        "cf_type": "operating_outflow",
+        "confidence": 0.99
+      }
+    },
+    {
+      "id": "rule_bank_charges",
+      "name": "Bank Charges & Fees",
+      "priority": 8,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["BANK CHARGES", "ACCOUNT FEE", "MONTHLY FEE", "OVERDRAFT FEE", "TRANSACTION FEE", "SERVICE CHARGE"] }
+        ]
+      },
+      "action": {
+        "category": "Finance Costs",
+        "pl_line": "7500 - Bank Charges",
+        "cf_type": "operating_outflow",
+        "confidence": 0.92
+      }
+    },
+    {
+      "id": "rule_loan_repayment",
+      "name": "Loan / Finance Repayment",
+      "priority": 8,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["LOAN REPAYMENT", "FINANCE PAYMENT", "BBLS", "CBILS", "MORTGAGE", "HIRE PURCHASE"] }
+        ]
+      },
+      "action": {
+        "category": "Finance Costs",
+        "pl_line": "7600 - Loan Repayments",
+        "cf_type": "financing_outflow",
+        "confidence": 0.93
+      }
+    },
+    {
+      "id": "rule_insurance",
+      "name": "Insurance Premiums",
+      "priority": 8,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["INSURANCE", "AVIVA", "AXA", "HISCOX", "ZURICH", "ALLIANZ", "PREMIUM", "EMPLOYERS LIABILITY"] }
+        ]
+      },
+      "action": {
+        "category": "Insurance",
+        "pl_line": "6800 - Insurance",
+        "cf_type": "operating_outflow",
+        "confidence": 0.88
+      }
+    },
+    {
+      "id": "rule_professional_fees",
+      "name": "Professional Fees",
+      "priority": 7,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["ACCOUNTANT", "SOLICITOR", "LEGAL FEES", "AUDIT", "CONSULTING", "CONSULTANT"] },
+          { "field": "description", "op": "regex", "pattern": "(?i)(chartered|accountan|solicitor|legal\\sfee)" }
+        ]
+      },
+      "action": {
+        "category": "Professional Fees",
+        "pl_line": "8100 - Professional Fees",
+        "cf_type": "operating_outflow",
+        "confidence": 0.88
+      }
+    },
+    {
+      "id": "rule_marketing",
+      "name": "Marketing & Advertising",
+      "priority": 7,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["GOOGLE ADS", "FACEBOOK ADS", "META ADS", "LINKEDIN", "MAILCHIMP", "ADVERTISING", "MARKETING", "PR AGENCY"] }
+        ]
+      },
+      "action": {
+        "category": "Marketing",
+        "pl_line": "7100 - Marketing & Advertising",
+        "cf_type": "operating_outflow",
+        "confidence": 0.92
+      }
+    },
+    {
+      "id": "rule_saas_subscriptions",
+      "name": "SaaS / Software Subscriptions",
+      "priority": 7,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["XERO", "QUICKBOOKS", "SAGE", "MICROSOFT", "GOOGLE WORKSPACE", "SLACK", "ZOOM", "ADOBE", "GITHUB", "AWS", "AZURE", "HEROKU", "VERCEL"] }
+        ]
+      },
+      "action": {
+        "category": "Technology",
+        "pl_line": "7200 - Software & Subscriptions",
+        "cf_type": "operating_outflow",
+        "confidence": 0.93
+      }
+    },
+    {
+      "id": "rule_travel",
+      "name": "Travel & Subsistence",
+      "priority": 6,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["TRAINLINE", "TFL", "NATIONAL RAIL", "EASYJET", "RYANAIR", "BA.COM", "BRITISH AIRWAYS", "UBER", "BOLT", "ENTERPRISE CAR", "HOTEL", "TRAVELODGE", "PREMIER INN"] }
+        ]
+      },
+      "action": {
+        "category": "Travel & Subsistence",
+        "pl_line": "7300 - Travel & Subsistence",
+        "cf_type": "operating_outflow",
+        "confidence": 0.90
+      }
+    },
+    {
+      "id": "rule_inbound_bacs",
+      "name": "Inbound BACS / Customer Receipts",
+      "priority": 6,
+      "type": "categorize",
+      "conditions": {
+        "operator": "AND",
+        "tests": [
+          { "field": "direction", "op": "eq", "value": "credit" },
+          { "field": "description", "op": "regex", "pattern": "(?i)BACS|FASTER PAYMENT|FP\\s|INV\\s?\\d|INVOICE" }
+        ]
+      },
+      "action": {
+        "category": "Revenue",
+        "pl_line": "1000 - Sales",
+        "cf_type": "operating_inflow",
+        "confidence": 0.82
+      }
+    },
+    {
+      "id": "rule_director_dividend",
+      "name": "Director Dividend",
+      "priority": 9,
+      "type": "categorize",
+      "conditions": {
+        "operator": "OR",
+        "tests": [
+          { "field": "description", "op": "contains_any", "values": ["DIVIDEND", "DIV PAYMENT", "SHAREHOLDER PAYMENT"] }
+        ]
+      },
+      "action": {
+        "category": "Dividends",
+        "pl_line": "9100 - Dividends",
+        "cf_type": "financing_outflow",
+        "confidence": 0.95
+      }
+    },
+
+    {
+      "id": "anom_duplicate",
+      "name": "Possible Duplicate Transaction",
+      "priority": 1,
+      "type": "anomaly",
+      "conditions": {
+        "operator": "AND",
+        "tests": [
+          { "field": "amount",       "op": "matches_prior_within_days", "days": 5 },
+          { "field": "description",  "op": "similarity_gte", "threshold": 0.85 }
+        ]
+      },
+      "action": {
+        "flag": "POSSIBLE_DUPLICATE",
+        "severity": "high",
+        "message": "This transaction appears to match a recent identical payment",
+        "suggested_entry": "Review and void if confirmed duplicate"
+      }
+    },
+    {
+      "id": "anom_large_outlier",
+      "name": "Large Outlier Payment",
+      "priority": 2,
+      "type": "anomaly",
+      "conditions": {
+        "operator": "AND",
+        "tests": [
+          { "field": "direction", "op": "eq", "value": "debit" },
+          { "field": "amount",    "op": "gt_zscore", "threshold": 2.5, "window_months": 3 }
+        ]
+      },
+      "action": {
+        "flag": "LARGE_OUTLIER",
+        "severity": "medium",
+        "message": "Payment is more than 2.5σ above the 3-month average for this category",
+        "suggested_entry": "Verify authorisation for unusually large payment"
+      }
+    },
+    {
+      "id": "anom_round_number",
+      "name": "Suspiciously Round Number",
+      "priority": 3,
+      "type": "anomaly",
+      "conditions": {
+        "operator": "AND",
+        "tests": [
+          { "field": "direction", "op": "eq", "value": "debit" },
+          { "field": "amount",    "op": "is_round", "divisor": 1000 },
+          { "field": "amount",    "op": "gt", "value": 5000 }
+        ]
+      },
+      "action": {
+        "flag": "ROUND_NUMBER",
+        "severity": "low",
+        "message": "Large round-number payment — verify this is not an estimate",
+        "suggested_entry": null
+      }
+    },
+    {
+      "id": "anom_unmatched_receipt",
+      "name": "Large Receipt Without Invoice Pattern",
+      "priority": 4,
+      "type": "anomaly",
+      "conditions": {
+        "operator": "AND",
+        "tests": [
+          { "field": "direction",      "op": "eq",    "value": "credit" },
+          { "field": "amount",         "op": "gt",    "value": 500 },
+          { "field": "description",    "op": "not_regex", "pattern": "(?i)INV|INVOICE|REF|ORDER" }
+        ]
+      },
+      "action": {
+        "flag": "UNMATCHED_RECEIPT",
+        "severity": "low",
+        "message": "Inbound payment over £500 without a recognisable invoice reference",
+        "suggested_entry": "Post to Suspense (9999) pending invoice allocation"
+      }
+    },
+    {
+      "id": "anom_timing",
+      "name": "Payroll Timing Anomaly",
+      "priority": 5,
+      "type": "anomaly",
+      "conditions": {
+        "operator": "AND",
+        "tests": [
+          { "field": "category",     "op": "eq",          "value": "Staff Costs" },
+          { "field": "day_of_month", "op": "not_between",  "min": 25, "max": 5 }
+        ]
+      },
+      "action": {
+        "flag": "TIMING_ANOMALY",
+        "severity": "low",
+        "message": "Payroll-categorised payment falls outside the normal 25th–5th window",
+        "suggested_entry": "Confirm this is not an early/late payroll run or duplicate"
+      }
+    }
+  ],
+
+  "fallback": {
+    "category": "Unclassified",
+    "pl_line": "9999 - Suspense",
+    "cf_type": "unclassified",
+    "flag": "NEEDS_REVIEW",
+    "severity": "low",
+    "confidence": 0.0
+  }
+}
