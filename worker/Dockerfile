@@ -1,11 +1,11 @@
-FROM python:3.11.12-slim-bookworm
+FROM python:3.11-slim
 
-# WeasyPrint system deps (Pango, HarfBuzz, FriBidi)
+# WeasyPrint system deps — package names for Debian Trixie (python:3.11-slim)
+# libpango1.0-0 was renamed to libpango-1.0-0 in Trixie
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpango1.0-0 \
+    libpango-1.0-0 \
     libharfbuzz0b \
     libfribidi0 \
-    libpangoft2-1.0-0 \
     libcairo2 \
     libgdk-pixbuf-2.0-0 \
     shared-mime-info \
