@@ -88,6 +88,23 @@ export default function OnboardPage() {
             className="w-full bg-teal-700 hover:bg-teal-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-60">
             {loading ? 'Setting up…' : 'Continue to checkout →'}
           </button>
+
+          <button type="button" disabled={loading}
+            onClick={async () => {
+              if (!orgName.trim()) { setError('Business name is required'); return }
+              setError(''); setLoading(true)
+              const res = await fetch('/api/onboard', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orgName: orgName.trim(), plan: 'free' }),
+              })
+              const data = await res.json()
+              if (!res.ok) { setError(data.error ?? 'Setup failed'); setLoading(false); return }
+              router.push('/upload')
+            }}
+            className="w-full border border-teal-600 text-teal-700 hover:bg-teal-50 font-medium py-3 rounded-xl transition disabled:opacity-60 text-sm">
+            Start free trial — no card required
+          </button>
         </form>
 
         <p className="text-xs text-slate-400 text-center mt-5">
