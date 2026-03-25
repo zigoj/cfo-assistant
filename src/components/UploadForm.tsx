@@ -10,9 +10,13 @@ interface FileSlot {
   hint: string
 }
 
-const SLOTS: FileSlot[] = [
-  { key: 'bank_pdf',    label: 'Bank statement (PDF)',          accept: '.pdf',                  required: true,  hint: 'Digital PDF from your bank — any major UK bank supported' },
-  { key: 'pl_excel',   label: 'P&L (Excel or CSV)',            accept: '.xlsx,.xls,.csv',        required: true,  hint: 'Your own P&L template — we map columns automatically' },
+interface FileSlotWithSample extends FileSlot {
+  sample?: string
+}
+
+const SLOTS: FileSlotWithSample[] = [
+  { key: 'bank_pdf',    label: 'Bank statement (PDF)',          accept: '.pdf',                  required: true,  hint: 'Digital PDF from your bank — any major UK bank supported', sample: '/templates/bank_statement_demo.pdf' },
+  { key: 'pl_excel',   label: 'P&L (Excel or CSV)',            accept: '.xlsx,.xls,.csv',        required: true,  hint: 'Your own P&L template — we map columns automatically', sample: '/templates/pl_demo.xlsx' },
   { key: 'tb_csv',     label: 'Trial balance (CSV) — optional', accept: '.csv',                  required: false, hint: 'For GL bridge reconciliation' },
   { key: 'budget_csv', label: 'Budget (Excel or CSV) — optional', accept: '.xlsx,.xls,.csv',     required: false, hint: 'For budget vs. actual comparison' },
 ]
@@ -80,9 +84,16 @@ export default function UploadForm({ orgId }: { orgId: string }) {
       {/* File slots */}
       {SLOTS.map(slot => (
         <div key={slot.key}>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
-            {slot.label}
-            {slot.required && <span className="text-red-500 ml-1">*</span>}
+          <label className="flex items-center justify-between text-sm font-medium text-slate-700 mb-1">
+            <span>
+              {slot.label}
+              {slot.required && <span className="text-red-500 ml-1">*</span>}
+            </span>
+            {slot.sample && (
+              <a href={slot.sample} download className="text-xs text-teal-600 hover:underline font-normal" onClick={e => e.stopPropagation()}>
+                ↓ sample
+              </a>
+            )}
           </label>
           <div
             onDrop={e => handleDrop(slot.key, e)}
