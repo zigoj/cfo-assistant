@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser'
 
-async function getAuthHeader() {
+async function getAuthHeader(): Promise<Record<string, string>> {
   const supabase = createSupabaseBrowserClient()
   const { data: { session } } = await supabase.auth.getSession()
   return session?.access_token ? { 'Authorization': `Bearer ${session.access_token}` } : {}
