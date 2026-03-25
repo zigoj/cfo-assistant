@@ -7,6 +7,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { createSupabaseBrowserClient } from '@/lib/supabase-browser'
+
+async function getAuthHeader() {
+  const supabase = createSupabaseBrowserClient()
+  const { data: { session } } = await supabase.auth.getSession()
+  return session?.access_token ? { 'Authorization': `Bearer ${session.access_token}` } : {}
+}
 
 const PLANS = [
   { key: 'starter', label: 'Starter', price: '£89/mo', quota: '3 reports/mo · 14-day trial' },
@@ -29,7 +36,7 @@ export default function OnboardPage() {
 
     const res = await fetch('/api/onboard', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...(await getAuthHeader()) },
       body: JSON.stringify({ orgName: orgName.trim(), plan }),
     })
     const data = await res.json()
@@ -95,7 +102,7 @@ export default function OnboardPage() {
               setError(''); setLoading(true)
               const res = await fetch('/api/onboard', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', ...(await getAuthHeader()) },
                 body: JSON.stringify({ orgName: orgName.trim(), plan: 'free' }),
               })
               const data = await res.json()
