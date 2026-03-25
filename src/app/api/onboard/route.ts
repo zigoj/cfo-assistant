@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
   await admin.from('org_members').insert({ org_id: org.id, user_id: user.id, role: 'owner' })
 
-  await sendWelcomeEmail({ to: user.email!, orgName: orgName.trim() }).catch(() => {})
+  sendWelcomeEmail({ to: user.email!, orgName: orgName.trim() }).catch(() => {})  // fire-and-forget
 
   return NextResponse.json({ orgId: org.id }, { status: 201 })
 }

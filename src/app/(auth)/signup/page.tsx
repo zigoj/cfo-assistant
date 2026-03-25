@@ -7,7 +7,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase-browser'
 function SignupForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const plan = searchParams.get('plan') ?? 'starter'
+  const plan = searchParams.get('plan') ?? 'free'
 
   const [orgName, setOrgName]   = useState('')
   const [email, setEmail]       = useState('')
