@@ -3,14 +3,25 @@ import { createSupabaseServerClient, createSupabaseAdmin } from '@/lib/supabase-
 import { sendWelcomeEmail } from '@/lib/resend'
 
 export async function POST(req: NextRequest) {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const admin = createSupabaseAdmin()
+
+  // Prefer Bearer token (sent right after signup before cookie is set)
+  let user: any = null
+  const authHeader = req.headers.get('authorization')
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.slice(7)
+    const { data } = await admin.auth.getUser(token)
+    user = data.user
+  }
+  if (!user) {
+    const supabase = await createSupabaseServerClient()
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  }
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { orgName } = await req.json() as { orgName: string; plan: string }
   if (!orgName?.trim()) return NextResponse.json({ error: 'Business name required' }, { status: 400 })
-
-  const admin = createSupabaseAdmin()
 
   // Check not already onboarded
   const { data: existing } = await admin.from('org_members').select('org_id').eq('user_id', user.id).limit(1).single()

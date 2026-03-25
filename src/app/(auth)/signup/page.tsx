@@ -39,9 +39,13 @@ function SignupForm() {
     if (signupError) { setError(signupError.message); setLoading(false); return }
 
     // Create org + membership via server action (called after auth)
+    const accessToken = signupData.session?.access_token
     const res = await fetch('/api/onboard', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}),
+      },
       body: JSON.stringify({ orgName, plan }),
     })
     if (!res.ok) {
