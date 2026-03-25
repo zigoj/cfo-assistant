@@ -11,7 +11,7 @@ import { enqueueAnalysis } from '@/lib/worker-client'
 export const maxDuration = 60  // Vercel Pro max; keeps poll window within function lifetime
 
 const MAX_BYTES = 10 * 1024 * 1024  // 10 MB for guest uploads
-const LITE_ORG_ID = process.env.LITE_ORG_ID!  // a fixed org in Supabase for B2C guests
+const LITE_ORG_ID = (process.env.LITE_ORG_ID ?? '').trim()  // a fixed org in Supabase for B2C guests
 
 export async function POST(req: NextRequest) {
   let form: FormData
