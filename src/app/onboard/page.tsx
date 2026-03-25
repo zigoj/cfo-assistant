@@ -16,9 +16,8 @@ export default function OnboardPage() {
   const [plan, setPlan]       = useState('starter')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
-  const [token, setToken]     = useState<string | null>(null)
+  const [token, setToken] = useState<string | null>(null)
 
-  // Grab the access token once on mount — Supabase stores session in localStorage
   useEffect(() => {
     const supabase = createSupabaseBrowserClient()
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -66,7 +65,7 @@ export default function OnboardPage() {
         <div className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Business name</label>
-            <input type="text" autoFocus
+            <input type="text" autoFocus placeholder="e.g. Acme Ltd"
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
               value={orgName} onChange={e => setOrgName(e.target.value)} />
           </div>
