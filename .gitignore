@@ -53,3 +53,6 @@ worker/.venv/
 
 # Uploads
 /tmp/
+
+# Internal docs
+*.md
