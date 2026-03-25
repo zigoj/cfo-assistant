@@ -44,6 +44,7 @@ export default function LitePage() {
   }
 
   const sym = '£'
+  const isHealthy = result && result.burnRate === 0
   const runwayColor = result && result.runwayDays != null && result.runwayDays < 60 ? '#dc2626' : '#059669'
 
   async function handleBuyPack() {
@@ -101,11 +102,15 @@ export default function LitePage() {
             {/* The hook — cash runway front and centre */}
             <div className="bg-white/10 backdrop-blur rounded-2xl p-8 text-center border border-white/20">
               <p className="text-teal-200 text-sm font-medium uppercase tracking-wide mb-2">Your cash lasts</p>
-              <p className="text-7xl font-black tabular-nums" style={{ color: runwayColor }}>
-                {result.runwayDays ?? '—'}
-              </p>
-              <p className="text-teal-200 text-lg mt-1">days</p>
-              {result.runwayDays != null && result.runwayDays < 60 && (
+              {isHealthy ? (
+                <p className="text-6xl font-black" style={{ color: '#059669' }}>∞</p>
+              ) : (
+                <p className="text-7xl font-black tabular-nums" style={{ color: runwayColor }}>
+                  {result.runwayDays ?? '—'}
+                </p>
+              )}
+              <p className="text-teal-200 text-lg mt-1">{isHealthy ? 'Net inflow month' : 'days'}</p>
+              {!isHealthy && result.runwayDays != null && result.runwayDays < 60 && (
                 <p className="text-red-300 text-sm mt-3 font-medium">⚠ Less than 60 days — action recommended</p>
               )}
             </div>
@@ -113,7 +118,7 @@ export default function LitePage() {
             {/* Secondary KPIs */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Burn rate', value: `${sym}${Math.abs(result.burnRate).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/mo` },
+                { label: 'Burn rate', value: isHealthy ? 'Cash positive' : `${sym}${Math.abs(result.burnRate).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/mo` },
                 { label: 'Gross margin', value: result.grossMargin != null ? `${(result.grossMargin * 100).toFixed(1)}%` : '—' },
                 { label: 'Cash close', value: `${sym}${Math.abs(result.cashClose).toLocaleString('en-GB', { maximumFractionDigits: 0 })}` },
               ].map(({ label, value }) => (

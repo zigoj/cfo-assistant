@@ -26,7 +26,7 @@ SECTION_KEYWORDS = {
 
 # Column name synonyms → canonical fields
 COL_SYNONYMS = {
-    "label":   ["description", "account name", "line item", "item name", "narrative", "account", "name"],
+    "label":   ["label", "description", "account name", "line item", "item name", "narrative", "account", "name"],
     "value":   ["amount", "actual", "value", "total", "£", "gbp", "eur", "usd"],
     "gl_code": ["account code", "gl code", "account no", "account number", "nominal", "code"],
     "budget":  ["budget", "plan", "forecast"],
