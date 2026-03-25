@@ -1,19 +1,8 @@
 'use client'
-/**
- * /onboard — shown when a logged-in user has no org membership yet.
- * Creates the org via /api/onboard, then starts checkout for paid plans
- * or goes straight to /upload for free/trial.
- */
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser'
-
-async function getAuthHeader(): Promise<Record<string, string>> {
-  const supabase = createSupabaseBrowserClient()
-  const { data: { session } } = await supabase.auth.getSession()
-  return session?.access_token ? { 'Authorization': `Bearer ${session.access_token}` } : {}
-}
 
 const PLANS = [
   { key: 'starter', label: 'Starter', price: '£89/mo', quota: '3 reports/mo · 14-day trial' },
@@ -27,32 +16,42 @@ export default function OnboardPage() {
   const [plan, setPlan]       = useState('starter')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
+  const [token, setToken]     = useState<string | null>(null)
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  // Grab the access token once on mount — Supabase stores session in localStorage
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient()
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) { router.replace('/login'); return }
+      setToken(session.access_token)
+    })
+  }, [router])
+
+  async function callOnboard(planKey: string) {
     if (!orgName.trim()) { setError('Business name is required'); return }
-    setError('')
-    setLoading(true)
+    if (!token) { router.replace('/login'); return }
+    setError(''); setLoading(true)
 
     const res = await fetch('/api/onboard', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...(await getAuthHeader()) },
-      body: JSON.stringify({ orgName: orgName.trim(), plan }),
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ orgName: orgName.trim(), plan: planKey }),
     })
     const data = await res.json()
     if (!res.ok) { setError(data.error ?? 'Setup failed'); setLoading(false); return }
 
-    const { orgId } = data
+    if (planKey === 'free') {
+      router.push('/upload')
+      return
+    }
 
-    // All paid plans start with Stripe checkout (trial enabled)
     const checkout = await fetch('/api/create-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ planKey: `b2b_${plan}`, orgId, billing: 'monthly' }),
+      body: JSON.stringify({ planKey: `b2b_${planKey}`, orgId: data.orgId, billing: 'monthly' }),
     })
     const { checkoutUrl, error: checkoutErr } = await checkout.json()
     if (checkoutErr) { setError(checkoutErr); setLoading(false); return }
-
     window.location.href = checkoutUrl
   }
 
@@ -64,10 +63,10 @@ export default function OnboardPage() {
 
         {error && <p className="text-red-600 text-sm mb-4 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Business name</label>
-            <input type="text" required autoFocus
+            <input type="text" autoFocus
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
               value={orgName} onChange={e => setOrgName(e.target.value)} />
           </div>
@@ -91,28 +90,16 @@ export default function OnboardPage() {
             </div>
           </div>
 
-          <button type="submit" disabled={loading}
+          <button disabled={loading || !token} onClick={() => callOnboard(plan)}
             className="w-full bg-teal-700 hover:bg-teal-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-60">
             {loading ? 'Setting up…' : 'Continue to checkout →'}
           </button>
 
-          <button type="button" disabled={loading}
-            onClick={async () => {
-              if (!orgName.trim()) { setError('Business name is required'); return }
-              setError(''); setLoading(true)
-              const res = await fetch('/api/onboard', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', ...(await getAuthHeader()) },
-                body: JSON.stringify({ orgName: orgName.trim(), plan: 'free' }),
-              })
-              const data = await res.json()
-              if (!res.ok) { setError(data.error ?? 'Setup failed'); setLoading(false); return }
-              router.push('/upload')
-            }}
+          <button disabled={loading || !token} onClick={() => callOnboard('free')}
             className="w-full border border-teal-600 text-teal-700 hover:bg-teal-50 font-medium py-3 rounded-xl transition disabled:opacity-60 text-sm">
             Start free trial — no card required
           </button>
-        </form>
+        </div>
 
         <p className="text-xs text-slate-400 text-center mt-5">
           Your trial starts immediately. You won't be charged for 14 days.
