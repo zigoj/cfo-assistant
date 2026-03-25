@@ -1,22 +1,39 @@
-import { redirect } from 'next/navigation'
-import { createSupabaseServerClient } from '@/lib/supabase-server'
+'use client'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createSupabaseBrowserClient } from '@/lib/supabase-browser'
 import UploadForm from '@/components/UploadForm'
 
-export default async function UploadPage() {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+export default function UploadPage() {
+  const router = useRouter()
+  const [org, setOrg] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
-  const { data: membership } = await supabase
-    .from('org_members')
-    .select('org_id, role, orgs(id, name, tier, report_quota, reports_used)')
-    .eq('user_id', user.id)
-    .limit(1)
-    .single()
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient()
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session) { router.replace('/login'); return }
 
-  if (!membership) redirect('/onboard')
+      const { data: membership } = await supabase
+        .from('org_members')
+        .select('org_id, role, orgs(id, name, tier, report_quota, reports_used)')
+        .eq('user_id', session.user.id)
+        .limit(1)
+        .single()
 
-  const org = membership.orgs as any
+      if (!membership) { router.replace('/onboard'); return }
+      setOrg(membership.orgs)
+      setLoading(false)
+    })
+  }, [router])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-slate-400 text-sm">Loading…</div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">

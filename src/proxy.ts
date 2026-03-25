@@ -30,21 +30,8 @@ export async function proxy(req: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
-
-  const isProtected = PROTECTED.some(p => pathname.startsWith(p))
-  const isAuthRoute = AUTH_ROUTES.some(p => pathname.startsWith(p))
-
-  if (isProtected && !user) {
-    const url = req.nextUrl.clone()
-    url.pathname = '/login'
-    url.searchParams.set('next', pathname)
-    return NextResponse.redirect(url)
-  }
-
-  if (isAuthRoute && user) {
-    return NextResponse.redirect(new URL('/upload', req.url))
-  }
+  // Session refresh only — route protection is handled client-side
+  await supabase.auth.getUser()
 
   return res
 }
